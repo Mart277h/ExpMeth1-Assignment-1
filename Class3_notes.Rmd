@@ -188,16 +188,41 @@ Try the following exercises to practice summarise(), group_by(), mean() and pipe
 
 1. Is there a gender difference when it comes to balloon balancing?
 
+```{r}
+summary_balloon_bygender <- df %>% 
+  group_by(gender) %>% 
+  summarise(mean(balloon_balance))
+summary_balloon_bygender
+```
 
 2. Is there a relation between sound level preference and which cola was chosen?
 
+```{r}
+summary_cola_soundlevel <- df %>% 
+  group_by(taste_cola) %>% 
+  summarise(mean(sound_level_pref))
+summary_cola_soundlevel
+```
+
 
 3. Does handedness influence average tongue twisting speed?
+```{r}
+summary_tongue_handedness <- df %>%  
+  group_by(handedness) %>% 
+  summarise(mean(tongue_twist))
+summary_tongue_handedness
+```
 
   3a. Can you add a column to the summary, which contains number of people in each group (e.g. number of right handed people), hint: look at the n() function
-  
-  3b. What does number of people tell us about the estimates of the mean? Are our results reliable?
+```{r}
+summary_tongue_handedness <- df %>%  
+  group_by(handedness) %>% 
+  summarise(mean(tongue_twist), n())
+summary_tongue_handedness
+```
 
+  3b. What does number of people tell us about the estimates of the mean? Are our results reliable?
+- No because so few people are left-handed
 
 
 ## Part 3: Including Plots
