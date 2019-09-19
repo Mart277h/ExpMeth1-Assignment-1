@@ -28,7 +28,7 @@ male_lefthanded <- filter(df, gender == "male" & handedness == "Left-handed")
 
 #1
 shoes39plus <- filter(df,shoesize >= 39)
-View(shoes39plus)
+
 
 #2
 levels(df$touch_floor)
@@ -72,5 +72,8 @@ df_new3 <- select(df, "gender", "shoesize", everything())
 words_per_sec <- mutate(df, words_per_sec = 99/tongue_twist)
 
 #2 
-breath_min <- mutate(df, beath_min = breath_hold %/% 60)
-df$breath_sec <- mutate(df, breath_sec = (breath_min %/% 60) * 60) 
+breath_min <- mutate(df, breath_min = breath_hold %/% 60)
+breath_sec <- mutate(breath_min, breath_sec = breath_hold - (breath_min*60)) 
+
+#3 BONUS: Create a new column where you calculate how far each student is from the average words per second.
+breath_average <- mutate(breath_sec, breath_average = breath_hold - (mean(breath_hold)))
