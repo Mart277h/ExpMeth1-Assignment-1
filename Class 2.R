@@ -64,3 +64,13 @@ df_new2 <- select(df, vars)
 
 #3
 df_new3 <- select(df, "gender", "shoesize", everything())
+
+#Exercise 4
+
+#1 
+#Vi har 99 ord og hvor mange seconder du har brugt 
+words_per_sec <- mutate(df, words_per_sec = 99/tongue_twist)
+
+#2 
+breath_min <- mutate(df, beath_min = breath_hold %/% 60)
+df$breath_sec <- mutate(df, breath_sec = (breath_min %/% 60) * 60) 
