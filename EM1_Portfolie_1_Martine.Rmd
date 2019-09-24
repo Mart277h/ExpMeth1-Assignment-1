@@ -1,12 +1,15 @@
 ---
 title: "Portfolio 1 — Experimental Methods 1 2019"
-author: "Fabio Trecca"
-date: "9/19/2019"
+author: "Martine Lind Jensen"
+date: "9/2/2019"
 output: html_document
 ---
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+
+library(pacman)
+p_load(tidyverse, anytime)
 ```
 
 ## Portfolio exam - Part 1
@@ -17,7 +20,8 @@ First of all, you have to import the personality data. If the dataset is in your
 
 ```{r load_data}
 df <- read.csv("NEW_CogSciPersonalityTest2019.csv")
-library(tidyverse)
+
+df <- df[,-1]
 ```
 
 Once you are done loading the data, you can start working on the questions below.
@@ -41,6 +45,11 @@ Who likes silence vs. noise best? Males or females? Also in this case you should
 
 ```{r question2}
 
+ggplot(df, aes(x = gender, y = sound_level_pref, fill = gender))+
+  geom_bar(stat='summary', fun.y = mean, width = 0.5)+
+  geom_errorbar(stat = 'summary', fun.data = mean_se, width = 0.2)+
+  labs(x = "Gender", y = "SoundLevel")+
+  theme_minimal()
 ```
 
 Explain your results in plain terms here: 
@@ -52,6 +61,9 @@ Explain your results in plain terms here:
 Are the breath_hold data normally distributed? Provide visual and numeric support for your answer.
 
 ```{r question3}
+
+ggplot(df, aes(x = breath_hold)) + 
+  geom_histogram()
 
 ```
 
