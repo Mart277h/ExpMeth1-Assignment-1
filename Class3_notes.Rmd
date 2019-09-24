@@ -373,10 +373,11 @@ ggplot(df, aes(x=gender, y=balloon, fill = gender))+
 
 ```{r}
 ggplot(df, aes(x=handedness, y=shoesize, fill = handedness))+
-  geom_bar(stat='summary', fun.y = mean, width = 0.5)+
+  geom_bar(stat='summary', fun.y = mean, width = 0.7)+
   geom_errorbar(stat = 'summary', fun.data = mean_se, width = 0.2)+
   labs(x = "Handedness", y = "Shoesize")+
-  theme_minimal()
+  theme_minimal() + 
+  scale_fill_brewer(palette = "Blues")
 ```
 
 
