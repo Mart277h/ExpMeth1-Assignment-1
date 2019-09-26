@@ -1,0 +1,47 @@
+---
+title: "Chapter 4"
+author: "Martine"
+date: "24/9/2019"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+
+facebookData <- read.delim("FacebookNarcissism.dat", header = TRUE)
+
+```
+
+If we don’t like the circles then we can change the shape of the points by specifying this for
+the geom. shape = 17 
+
+```{r}
+ggplot(facebookData, aes(x = NPQC_R_Total, y = Rating)) + 
+  geom_point(shape = 6)
+```
+Atthis stage we don’t know whether a rating represented coolness, attractiveness or whatever.
+It would be nice if we could differentiate different ratings, perhaps by plotting them in
+different colours. We can do this by setting the colour aesthetic to be the variable Rating_Type.
+
+```{r}
+ggplot(facebookData, aes(x = NPQC_R_Total, y = Rating)) + 
+  geom_point(aes(colour=Rating_Type)) 
+
+```
+
+
+```{r}
+ggplot(facebookData, aes(x = NPQC_R_Total, y = Rating)) +
+  geom_point(aes(colour = Rating_Type), position = "jitter")
+```
+
+```{r}
+ggplot(facebookData, aes(x = NPQC_R_Total, y = Rating)) +
+  geom_point(aes(shape = Rating_Type), position = "jitter")
+```
+
+```{r}
+
+```
+
