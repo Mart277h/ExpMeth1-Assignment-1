@@ -158,8 +158,14 @@ Shoe size could tell us something about general body size, which could also be c
 
 ```{r question5}
 
-body_size_vs_breathhold <- 
+body_size_vs_breathhold <- ggplot(df, aes(x = df$breath_hold, y = df$shoesize, colour = gender)) + 
+  geom_point() +
+  geom_smooth(method = lm) + 
+  labs(x = "Breath hold", y = "Shoesize")+
+  ggtitle("Shoesize vs breath hold") +
+  theme_bw()
 
+body_size_vs_breathhold
 ```
 
 
