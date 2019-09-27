@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE, include = TRUE)
 
 library(pacman)
 p_load(tidyverse, anytime)
+
+library(pastecs)
 ```
 
 ## Portfolio exam - Part 1
@@ -32,7 +34,26 @@ Who can hold their breath longer on average, those with right or left ocular dom
 
 
 ```{r question1}
+right_left_dominance <- filter(df, df$ocular_dom == "Left" | df$ocular_dom == "Right")
 
+breath_eyes <- ggplot(right_left_dominance, aes(x = ocular_dom, y = breath_hold, fill = ocular_dom))+
+  labs(x = "Ocular Dominance", y = "Breathhold")+
+  theme_minimal()
+
+breath_eyes + 
+  geom_bar(stat='summary', fun.y = mean, width = 0.5)+
+  geom_errorbar(stat = 'summary', fun.data = mean_se, width = 0.2)+
+  ggtitle("Breathold compaired to ocular dominance bar barplot")
+
+breath_eyes + 
+  geom_boxplot(width = 0.5) +
+  stat_summary(fun.y = mean, geom = "point", shape = 23, colour = "Black") + 
+  ggtitle("Breathold compaired to ocular dominance bar boxplot")
+
+group_eyes <- group_by(right_left_dominance, ocular_dom) %>% 
+  summarise(mean(breath_hold), sd(breath_hold))
+
+group_eyes
 ```
 
 Explain your results in plain terms here: 
@@ -45,11 +66,24 @@ Who likes silence vs. noise best? Males or females? Also in this case you should
 
 ```{r question2}
 
-ggplot(df, aes(x = gender, y = sound_level_pref, fill = gender))+
-  geom_bar(stat='summary', fun.y = mean, width = 0.5)+
-  geom_errorbar(stat = 'summary', fun.data = mean_se, width = 0.2)+
+silence_noise <- ggplot(df, aes(x = gender, y = sound_level_pref, fill = gender))+
   labs(x = "Gender", y = "SoundLevel")+
   theme_minimal()
+
+ silence_noise +
+   geom_bar(stat='summary', fun.y = mean, width = 0.5)+
+   geom_errorbar(stat = 'summary', fun.data = mean_se, width = 0.2)+
+   ggtitle("Silence vs noise barplot")
+ 
+ silence_noise +
+   geom_boxplot(width = 0.5) +
+  stat_summary(fun.y = mean, geom = "point", shape = 23, colour = "Black") + 
+  ggtitle("Silence vs noise boxplot")
+ 
+group_gender <- group_by(df, gender) %>% 
+  summarise(mean(sound_level_pref), sd(sound_level_pref))
+
+group_gender
 ```
 
 Explain your results in plain terms here: 
@@ -62,9 +96,17 @@ Are the breath_hold data normally distributed? Provide visual and numeric suppor
 
 ```{r question3}
 
-ggplot(df, aes(x = breath_hold)) + 
-  geom_histogram()
+breath_hold_plot <- ggplot(df, aes(x = breath_hold)) + 
+  geom_histogram(aes(y = ..density..), binwidth = 0.5) +  
+  ggtitle("Breath hold histogram") +
+  stat_function(fun = dnorm, args = list(mean = mean(df$breath_hold, na.rm = TRUE), sd = sd(df$breath_hold, na.rm = TRUE)), colour= "Red", size = 1)+
+  theme_classic()
 
+breath_hold_plot
+
+qqnorm(df$breath_hold)
+
+round(pastecs::stat.desc(df$breath_hold, basic = FALSE, norm = TRUE), digits = 2)
 ```
 
 
@@ -76,10 +118,35 @@ Explain your results in plain terms here:
 
 Are the Balloon reaction time data (balloon and balloon_balance) normally distributed? Provide visual and numeric support for your answer.
 
-```{r question4}
+```{r question4 - Balloon}
+balloon_plot <- ggplot(df, aes(x = balloon)) + 
+  geom_histogram(aes(y = ..density..), binwidth = 0.5) +  
+  ggtitle("Time of blowing up balloon") +
+  stat_function(fun = dnorm, args = list(mean = mean(df$balloon, na.rm = TRUE), sd = sd(df$balloon, na.rm = TRUE)), colour= "Red", size = 1)+
+  theme_classic()
+
+balloon_plot
+
+qqnorm(df$balloon)
+
+round(pastecs::stat.desc(df$balloon, basic = FALSE, norm = TRUE), digits = 2)
 
 ```
 
+```{r question 4 - Balloon Balancing}
+ballon_balance_plot <- ggplot(df, aes(x = balloon_balance)) + 
+  geom_histogram(aes(y = ..density..), binwidth = 0.5) +  
+  ggtitle("Balloon balancing") +
+  stat_function(fun = dnorm, args = list(mean = mean(df$balloon_balance, na.rm = TRUE), sd = sd(df$balloon_balance, na.rm = TRUE)), colour= "Red", size = 1)+
+  theme_classic()
+
+ballon_balance_plot
+
+qqnorm(df$balloon_balance)
+
+round(pastecs::stat.desc(df$balloon_balance, basic = FALSE, norm = TRUE), digits = 2)
+
+```
 
 Explain your results in plain terms here: 
 
@@ -90,6 +157,8 @@ Explain your results in plain terms here:
 Shoe size could tell us something about general body size, which could also be connected to one's ability to hold your breath. In other words we predict that there is a positive relation between shoe size and how long time CogSci students can hold their breath. Try plotting the two sets of data against each other using a scatter plot (hint: both variables are continuous variables). Bonus question: Males and females have different body sizes. Use grouping in your plot to distinguish the relationship between shoe size and holding breath for males and females.
 
 ```{r question5}
+
+body_size_vs_breathhold <- 
 
 ```
 
