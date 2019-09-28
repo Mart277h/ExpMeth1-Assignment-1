@@ -45,18 +45,17 @@ breath_eyes +
   geom_errorbar(stat = 'summary', fun.data = mean_se, width = 0.2)+
   ggtitle("Breathold compaired to ocular dominance bar barplot")
 
-breath_eyes + 
-  geom_boxplot(width = 0.5) +
-  stat_summary(fun.y = mean, geom = "point", shape = 23, colour = "Black") + 
-  ggtitle("Breathold compaired to ocular dominance bar boxplot")
-
 group_eyes <- group_by(right_left_dominance, ocular_dom) %>% 
   summarise(mean(breath_hold), sd(breath_hold))
 
 group_eyes
 ```
 
-Explain your results in plain terms here: 
+Explain your results in plain terms here:
+
+  The bar plot shows that those with left ocular dominance on average, don’t hold their breath as long as those with right ocular dominance. The numbers show the same. There is approximately 4 seconds difference between the two groups. 
+
+  The error bars show the standard error of the mean. They don’t tell much, but they relatively small. But if you look at the numbers for the standard deviation, they are relatively big, compared to the difference of 4 seconds between the two groups. Approximately 20 seconds for both groups in a mean of 55 seconds, shows that the datapoints deviate a lot from the mean. Which means that there isn’t enough evidence to conclude that people with left ocular dominance, are worse at holding their breath, than people with right ocular dominance.
 
 ---
 
@@ -86,7 +85,15 @@ group_gender <- group_by(df, gender) %>%
 group_gender
 ```
 
-Explain your results in plain terms here: 
+Explain your results in plain terms here:
+
+  The bar blot shows that females on average prefer a lower sound level than males. But the numbers show that the difference is 1 on the scale of sound level preference, so the difference is not at all significant. The error bars show the standard error of the mean, and they are large. 
+  The standard deviation shows that the males deviate a lot from the mean. The females also deviate a lot from the mean, but not as much as the males. 
+
+  The box plot shows a little more. It looks like the genders are much more different than shown in the bar plot. It actually shows, that females tend to prefer the same level of sound. The middle 50% of the females are clustered around the same sound level, but there are a few outliers that pushes the mean a bit up. 
+  The males are much more spread out, as the standard deviation showed, and the mean therefore falls on almost the same sound level as the females. This could indicate that the mean is not a good model for the data. 
+
+  That will conclude, that there is difference between the two groups, but the mean doesn’t show this, and therefore the mean isn’t a good fit for a model of the data.
 
 ---
 
@@ -97,8 +104,9 @@ Are the breath_hold data normally distributed? Provide visual and numeric suppor
 ```{r question3}
 
 breath_hold_plot <- ggplot(df, aes(x = breath_hold)) + 
-  geom_histogram(aes(y = ..density..), binwidth = 0.5) +  
+  geom_histogram(aes(y = ..density..), binwidth = 0.75) +  
   ggtitle("Breath hold histogram") +
+  labs(x = "Breath holding in seconds") +
   stat_function(fun = dnorm, args = list(mean = mean(df$breath_hold, na.rm = TRUE), sd = sd(df$breath_hold, na.rm = TRUE)), colour= "Red", size = 1)+
   theme_classic()
 
@@ -112,6 +120,14 @@ round(pastecs::stat.desc(df$breath_hold, basic = FALSE, norm = TRUE), digits = 2
 
 Explain your results in plain terms here: 
 
+  The histogram shows with the curve, shows that the data probably isn’t normally distributed. It is positively skewed, but there are also some outliers that interferes with that. When collected the data the participants were asked to stop at 120sec, which means that these datapoints aren’t correct, and you could argue that these could be removed. That would probably make the data a little more normally distributed.
+  
+  The Q-Q plot shows a pretty neat line, but all the datapoints fall below the diagonal line of normal distributed data. So the Q-Q plot shows that the data are a little more normal distributed, than shown on the histogram. 
+  The normality test (normtest.p) has a value of 0.04, which is below the minimum value of normal distributed data (0.05). So this values shows that the data is significantly different than normal distributed data. 
+  The tests also show that the skewness (skew.2SE) is quite close to 1 with a value of 0.95, which also indicates that the data isn’t normally distributed. While the kurtosis (kurt.2SE) has a value of -0.30, which isn’t that far from 0, which is the wanted value for normally distributed data. But together with all of the other tests, the kurtosis value of 0.3, also indicates that the breath holding data isn’t normally distributed. 
+  
+  This concludes, that you could maybe remove some outliers to make the data normally distributed, but the raw data is not normally distributed.
+
 ---
 
 #### Question 4
@@ -122,6 +138,7 @@ Are the Balloon reaction time data (balloon and balloon_balance) normally distri
 balloon_plot <- ggplot(df, aes(x = balloon)) + 
   geom_histogram(aes(y = ..density..), binwidth = 0.5) +  
   ggtitle("Time of blowing up balloon") +
+  labs(x = "Blowing up a balloon in seconds") +
   stat_function(fun = dnorm, args = list(mean = mean(df$balloon, na.rm = TRUE), sd = sd(df$balloon, na.rm = TRUE)), colour= "Red", size = 1)+
   theme_classic()
 
@@ -137,6 +154,7 @@ round(pastecs::stat.desc(df$balloon, basic = FALSE, norm = TRUE), digits = 2)
 ballon_balance_plot <- ggplot(df, aes(x = balloon_balance)) + 
   geom_histogram(aes(y = ..density..), binwidth = 0.5) +  
   ggtitle("Balloon balancing") +
+  labs(x = "Balancing a balloon in seconds") +
   stat_function(fun = dnorm, args = list(mean = mean(df$balloon_balance, na.rm = TRUE), sd = sd(df$balloon_balance, na.rm = TRUE)), colour= "Red", size = 1)+
   theme_classic()
 
@@ -149,6 +167,34 @@ round(pastecs::stat.desc(df$balloon_balance, basic = FALSE, norm = TRUE), digits
 ```
 
 Explain your results in plain terms here: 
+  The histogram of the balloon data, both of them, show that the data is not normally distributed in any way. They are both positively skewed, with a high frequency value of 120. Which we know is were they stopped timing it. 
+  
+  The Q-Q plots show the same for both balloon data. They are no where near the diagonal line in either of them. And the numbers show the same, the p value of the normality test is in both cases 0.00. For the “Time of blowing up a balloon” the kurtosis and the skewness numbers are really high, and nowhere near where they should be for the data to be normally distributed. The “Balancing balloon” have better numbers, but do not indicate normality. 
+  
+  The breath holding data looks much more normal distributed compared to this. 
+  
+  This do make sense since it is a frequency distribution of the time in both cases. Time measurement in their raw form are almost never normally distributed. I tried to transform the “Time of blowing up a balloon” data to see if that helped. I used the logarithmic function and the graphs and numbers are below
+  
+ The histogram looks much more normally distributed this time. There is still the outliers on the value of 120 seconds. You could argue that these could be removed, and then the data might be normally distributed. But the Q-Q plot still does not show normality and the p-value is still 0.00.
+  So even though the transformed data looks better, there has to be done more for the data to be normally distributed.  
+
+
+```{r}
+log_df <- df %>% mutate(balloon_log = log(balloon))
+
+balloon_log_plot <- ggplot(log_df, aes(x = log_df$balloon_log)) + 
+  geom_histogram(aes(y = ..density..), binwidth = 0.1) +  
+  ggtitle("Time of blowing up balloon Log") +
+  labs(x = "The logarithmic time of blowing up a balloon") +
+  stat_function(fun = dnorm, args = list(mean = mean(log_df$balloon_log, na.rm = TRUE), sd = sd(log_df$balloon_log, na.rm = TRUE)), colour= "Red", size = 1)+
+  theme_classic()
+
+balloon_log_plot
+
+qqnorm(log_df$balloon_log)
+
+round(pastecs::stat.desc(log_df$balloon_log, basic = FALSE, norm = TRUE), digits = 2)
+```
 
 ---
 
@@ -170,6 +216,10 @@ body_size_vs_breathhold
 
 
 Explain your results in plain terms here: 
+
+  The graph shows breath hold on the x axis and shoesize on the y-axis. If the theory was correct there will be an increase in the linear regression for both genders.  
+  The graph increases slightly for males and increases a little more for females. The graph indicates that the theory could be right for females, but there is to small an increase for the males to be significant. 
+  The datapoints are spread out a lot for both genders, and there is a lot of outliers. To conclude, the results aren’t significantly enough to prove the hypothesis of a relation between shoesize and breath holding abilities. Maybe in a bigger sample size, you could see a significant relation. 
 
 
 
