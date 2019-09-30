@@ -1,7 +1,7 @@
 ---
 title: "Portfolio 1 — Experimental Methods 1 2019"
 author: "Martine Lind Jensen"
-date: "9/2/2019"
+date: "9/30/2019"
 output: html_document
 ---
 
